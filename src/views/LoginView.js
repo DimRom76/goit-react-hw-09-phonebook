@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -24,7 +24,9 @@ const validationSchema = yup.object({
     .required('Password is required'),
 });
 
-function LoginView({ loginUser }) {
+function LoginView() {
+  const dispatch = useDispatch();
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -41,7 +43,7 @@ function LoginView({ loginUser }) {
       email: values.email,
       password: values.password,
     };
-    loginUser(newUserCredentials);
+    dispatch(authOperations.loginUser(newUserCredentials));
     resetForm();
   }
 
@@ -104,8 +106,4 @@ function LoginView({ loginUser }) {
   );
 }
 
-const mapDispatchToProps = {
-  loginUser: authOperations.loginUser,
-};
-
-export default connect(null, mapDispatchToProps)(LoginView);
+export default LoginView;

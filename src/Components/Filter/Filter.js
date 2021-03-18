@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField';
@@ -9,14 +8,18 @@ import { contactsSelectors, changeFilter } from '../../redux/contacts';
 
 //import s from './filter.module.css';
 
-function Filter({ value, onChange }) {
+function Filter() {
+  const value = useSelector(contactsSelectors.getFilter);
+
+  const dispatch = useDispatch();
+
   return (
     <TextField
       id="value"
       type="text"
       label="Поиск по имени"
       value={value}
-      onChange={onChange}
+      onChange={e => dispatch(changeFilter(e.target.value))}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
@@ -28,17 +31,4 @@ function Filter({ value, onChange }) {
   );
 }
 
-Filter.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
-};
-
-const mapStateToProps = state => ({
-  value: contactsSelectors.getFilter(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  onChange: e => dispatch(changeFilter(e.target.value)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Filter);
+export default Filter;

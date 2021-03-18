@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Paper } from '@material-ui/core';
 
@@ -10,13 +10,18 @@ import Modal from '../Components/Modal';
 
 import { contactsOperation, contactsSelectors } from '../redux/contacts';
 
-function ContactsView({ fetchContacts, isContactsLoading }) {
+function ContactsView() {
+  const isContactsLoading = useSelector(contactsSelectors.getLoading);
+  const dispatch = useDispatch();
+
   const [showModal, setshowModal] = useState(false);
   const [editContact, setEditContact] = useState({});
 
   useEffect(() => {
+    const fetchContacts = () => dispatch(contactsOperation.fetchContacts());
+
     fetchContacts();
-  }, [fetchContacts]);
+  }, [dispatch]);
 
   const toggleModal = () => {
     setshowModal(!showModal);
@@ -53,12 +58,4 @@ function ContactsView({ fetchContacts, isContactsLoading }) {
   );
 }
 
-const mapStateToProps = state => ({
-  isContactsLoading: contactsSelectors.getLoading(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchContacts: () => dispatch(contactsOperation.fetchContacts()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsView);
+export default ContactsView;

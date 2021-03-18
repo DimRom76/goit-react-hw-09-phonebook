@@ -151,9 +151,7 @@ function ContactForm({ onSave, editContact }) {
 }
 
 ContactForm.propTypes = {
-  onSubmitNew: PropTypes.func.isRequired,
-  onChangeContact: PropTypes.func.isRequired,
-  contacts: PropTypes.array.isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
 export default ContactForm;

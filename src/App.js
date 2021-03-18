@@ -1,7 +1,7 @@
 import { Route, Switch } from 'react-router-dom';
 import { useEffect, Suspense, lazy } from 'react';
 import { Container } from '@material-ui/core';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
@@ -35,10 +35,15 @@ const RegistrationView = lazy(() =>
   ),
 );
 
-function App({ errorLogin, isAuthLoading, onGetCurretnUser }) {
+function App() {
+  const errorLogin = useSelector(authSelectors.getError);
+  const isAuthLoading = useSelector(authSelectors.getLoading);
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    onGetCurretnUser();
-  }, [onGetCurretnUser]);
+    dispatch(authOperations.getCurrentUser());
+  }, [dispatch]);
 
   useEffect(() => {
     errorLogin && toast.warn(`Ошибка! ${errorLogin}`);
@@ -80,13 +85,4 @@ function App({ errorLogin, isAuthLoading, onGetCurretnUser }) {
   );
 }
 
-const mapStateToProps = state => ({
-  errorLogin: authSelectors.getError(state),
-  isAuthLoading: authSelectors.getLoading(state),
-});
-
-const mapDispatchToProps = {
-  onGetCurretnUser: authOperations.getCurrentUser,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

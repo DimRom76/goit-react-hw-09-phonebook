@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -34,7 +34,9 @@ const validationSchema = yup.object({
     .oneOf([yup.ref('password')], 'Password does not match'),
 });
 
-function RegistrationView({ registrationUser, errorRegistration }) {
+function RegistrationView() {
+  const dispatch = useDispatch();
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -54,7 +56,7 @@ function RegistrationView({ registrationUser, errorRegistration }) {
       email: values.email,
       password: values.password,
     };
-    registrationUser(newUserCredentials);
+    dispatch(authOperations.registrationUser(newUserCredentials));
     resetForm();
   }
 
@@ -156,8 +158,4 @@ function RegistrationView({ registrationUser, errorRegistration }) {
   );
 }
 
-const mapDispatchToProps = {
-  registrationUser: authOperations.registrationUser,
-};
-
-export default connect(null, mapDispatchToProps)(RegistrationView);
+export default RegistrationView;

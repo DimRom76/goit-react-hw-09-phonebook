@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -8,7 +8,12 @@ import { contactsOperation, contactsSelectors } from '../../redux/contacts';
 
 import s from './ContactList.module.css';
 
-function ContactList({ contacts, onDeleteContact, onEditContact }) {
+function ContactList({ onEditContact }) {
+  const contacts = useSelector(contactsSelectors.getVisibleContacts);
+  const dispatch = useDispatch();
+
+  const onDeleteContact = id => dispatch(contactsOperation.deleteContact(id));
+
   return (
     <ul className={s.older}>
       {contacts.map(({ id, name, number }) => {
@@ -40,16 +45,7 @@ function ContactList({ contacts, onDeleteContact, onEditContact }) {
 }
 
 ContactList.propTypes = {
-  contacts: PropTypes.array.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
+  onEditContact: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  contacts: contactsSelectors.getVisibleContacts(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  onDeleteContact: id => dispatch(contactsOperation.deleteContact(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
+export default ContactList;
